@@ -155,7 +155,9 @@ git push origin v1.0.0
 ```
 
 That triggers `.github/workflows/release.yml`, which builds, tests, packs and pushes to nuget.org using
-the `NUGET_API_KEY` repository secret. Untagged builds produce `0.0.0-alpha.0`.
+Trusted Publishing — nuget.org issues a short-lived key from the workflow's OIDC identity, with no
+API key stored in the repository. Untagged builds produce `0.0.0-alpha.0`.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

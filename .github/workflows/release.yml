@@ -3,6 +3,9 @@ name: Release
 # Publica no nuget.org quando uma tag de versão é enviada:
 #   git tag v1.0.0 && git push origin v1.0.0
 # O MinVer transforma a tag na versão do pacote, então a tag é a única fonte da verdade.
+#
+# A autenticação usa Trusted Publishing (OIDC): o GitHub prova a identidade deste workflow
+# e o nuget.org devolve uma chave válida por 1 hora. Não há API key guardada em secret.
 on:
   push:
     tags: ['v*']
@@ -13,7 +16,11 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: nuget # opcional: exija um revisor aqui para controlar a publicação
+    environment: nuget # precisa bater com o campo Environment da policy no nuget.org
+
+    permissions:
+      contents: read
+      id-token: write # emite o token OIDC que o nuget.org valida
 
     steps:
       - uses: actions/checkout@v7
@@ -35,11 +42,16 @@ jobs:
       - name: Pack
         run: dotnet pack src/PlainMediator/PlainMediator.csproj -c Release --no-build
 
-      - name: Push to nuget.org
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      # A chave temporária vale 1 hora, por isso é pedida só depois do build passar.
+      - name: Login no nuget.org (OIDC -> chave temporária)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }} # nome de perfil no nuget.org, não o e-mail
+
+      - name: Push para o nuget.org
         run: |
           dotnet nuget push "artifacts/packages/*.nupkg" \
-            --api-key "$NUGET_API_KEY" \
+            --api-key ${{ steps.login.outputs.NUGET_API_KEY }} \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate

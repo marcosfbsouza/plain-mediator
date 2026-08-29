@@ -156,7 +156,8 @@ git push origin v1.0.0
 ```
 
 Isso dispara o `.github/workflows/release.yml`, que compila, testa, empacota e envia para o nuget.org
-usando o secret `NUGET_API_KEY` do repositório. Builds sem tag produzem `0.0.0-alpha.0`.
+via Trusted Publishing — o nuget.org emite uma chave temporária a partir da identidade OIDC do
+workflow, sem API key guardada no repositório. Builds sem tag produzem `0.0.0-alpha.0`.
 
 ## Licença
 
