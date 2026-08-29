@@ -4,6 +4,21 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    groups:
+      # Dependências de teste não afetam quem consome o pacote: um PR só para todas.
+      test:
+        patterns:
+          - "xunit*"
+          - "Microsoft.NET.Test.Sdk"
+          - "coverlet.*"
+    ignore:
+      # A referência é de propósito a menor versão suportada. Subir para 10.x obrigaria
+      # quem consome em net8.0 a arrastar as bibliotecas 10.x junto.
+      - dependency-name: Microsoft.Extensions.DependencyInjection.Abstractions
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
