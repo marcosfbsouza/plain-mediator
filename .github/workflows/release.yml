@@ -1,0 +1,45 @@
+name: Release
+
+# Publica no nuget.org quando uma tag de versão é enviada:
+#   git tag v1.0.0 && git push origin v1.0.0
+# O MinVer transforma a tag na versão do pacote, então a tag é a única fonte da verdade.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: nuget # opcional: exija um revisor aqui para controlar a publicação
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Build
+        run: dotnet build PlainMediator.slnx -c Release
+
+      - name: Test
+        run: dotnet test PlainMediator.slnx -c Release --no-build
+
+      - name: Pack
+        run: dotnet pack src/PlainMediator/PlainMediator.csproj -c Release --no-build
+
+      - name: Push to nuget.org
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          dotnet nuget push "artifacts/packages/*.nupkg" \
+            --api-key "$NUGET_API_KEY" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate

@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # O MinVer deriva a versão das tags e da distância em commits.
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Restore
+        run: dotnet restore PlainMediator.slnx
+
+      - name: Build
+        run: dotnet build PlainMediator.slnx -c Release --no-restore
+
+      - name: Test
+        run: dotnet test PlainMediator.slnx -c Release --no-build --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
+
+      - name: Pack
+        run: dotnet pack src/PlainMediator/PlainMediator.csproj -c Release --no-build
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: artifacts/packages/*
+          if-no-files-found: error

@@ -1,0 +1,11 @@
+* text=auto
+
+*.cs text diff=csharp
+*.csproj text
+*.props text
+*.slnx text
+*.md text
+*.yml text
+
+*.png binary
+*.snk binary

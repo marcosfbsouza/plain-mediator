@@ -1,0 +1,23 @@
+<Solution>
+  <Folder Name="/0 - Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path="CHANGELOG.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+    <File Path="README.en.md" />
+  </Folder>
+  <Folder Name="/0 - Solution Items/.github/">
+    <File Path=".github/dependabot.yml" />
+    <File Path=".github/workflows/ci.yml" />
+    <File Path=".github/workflows/release.yml" />
+  </Folder>
+  <Folder Name="/1 - Src/">
+    <Project Path="src/PlainMediator/PlainMediator.csproj" />
+  </Folder>
+  <Folder Name="/2 - Tests/">
+    <Project Path="tests/PlainMediator.Tests/PlainMediator.Tests.csproj" />
+  </Folder>
+</Solution>
