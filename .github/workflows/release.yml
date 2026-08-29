@@ -47,7 +47,7 @@ jobs:
         uses: NuGet/login@v1
         id: login
         with:
-          user: ${{ secrets.NUGET_USER }} # nome de perfil no nuget.org, não o e-mail
+          user: marcosfbsouza # nome de perfil no nuget.org, não o e-mail
 
       - name: Push para o nuget.org
         run: |
