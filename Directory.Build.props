@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package metadata">
-    <!-- TODO: confirme autor e URL do repositório antes da primeira publicação. -->
     <Authors>Marcos Souza</Authors>
     <Copyright>Copyright (c) Marcos Souza</Copyright>
     <PackageProjectUrl>https://github.com/marcosfbsouza/plain-mediator</PackageProjectUrl>
